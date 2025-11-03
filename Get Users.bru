@@ -1,0 +1,44 @@
+meta {
+  name: Get Users
+  type: http
+  seq: 1
+}
+
+post {
+  url: https://echo.zuplo.io/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "{{something}}",
+    "body": "bar",
+    "userId": 1
+  }
+}
+
+vars:pre-request {
+  test-var: test-value
+}
+
+assert {
+  : 
+}
+
+script:pre-request {
+  const {TextDecoder, TextEncoder} = require('node:util');
+  globalThis.TextEncoder = TextEncoder;
+  const payload = "bla"
+  const encoded = new TextEncoder().encode(payload);
+  console.log("payload: ", payload);
+  console.log("encoded: ", encoded)
+  if (!(encoded instanceof Uint8Array)){
+    throw new TypeError("Why TextEncoder does not generate a Uint8Array?")
+  }
+  console.log("Successfully encoded")
+}
+
+docs {
+  This request retrieves a list of users from the JSONPlaceholder API.
+}
